@@ -8,18 +8,23 @@ Meteor.methods({
     'start': function () {
         myInt = Meteor.setInterval(function () {
             Listings.remove({});
-            console.log("********" + Listings.size);
             var response = HTTP.get('http://cis2016-exchange1.herokuapp.com/api/market_data/');
 
             _.each(response.data, function (item) {
                 //console.log(item);
                 Listings.insert(item);
             });
-            console.log(Listings.find().fetch());
+            //console.log(Listings.find().fetch());
+            //console.log("********");
         }, 1000);
     },
     'stop': function () {
         Meteor.clearInterval(myInt);
+    },
+    'getBuySellData': function (exchangeNum, symbol) {
+        var response = HTTP.get('http://cis2016-exchange' + exchangeNum + '.herokuapp.com/api/market_data/' + symbol);
+        console.log(response);
+        Session.set("buySellData", response);
     }
 });
 
@@ -30,8 +35,10 @@ if (Meteor.isClient) {
         },
         'click .stop': function () {
             Meteor.call('stop');
+            Meteor.call('getBuySellData', 1, 0001);
         }
     });
+
 }
 /*
  if (Meteor.isClient) {
