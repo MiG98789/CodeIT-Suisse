@@ -87,6 +87,7 @@ if (Meteor.isServer) {
             }
         },
         'marketBuy': function (exchange, symbol, qty) {
+            console.log("market buy: exchange: " + exchange + " symbol: " + symbol + " qty: " + qty);
             var postData = {
                 data: {
                     team_uid: team_uid,
