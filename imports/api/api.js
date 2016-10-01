@@ -2,7 +2,9 @@ Listings1 = new Mongo.Collection('listings1');
 Listings2 = new Mongo.Collection('listings2');
 Listings3 = new Mongo.Collection('listings3');
 
-Constants = new Mongo.Collection('constants');
+ex1Avgs = [];
+ex2Avgs = [];
+ex3Avgs = [];
 
 BuySell1 = new Mongo.Collection('buySell1');
 BuySell2 = new Mongo.Collection('buySell2');
@@ -14,6 +16,7 @@ if (Meteor.isServer) {
     Listings1.remove({});
     Listings2.remove({});
     Listings3.remove({});
+
 
     //Session data (essentially global variables) call the function first to update them
 
@@ -55,19 +58,19 @@ if (Meteor.isServer) {
 
             HTTP.get('http://cis2016-exchange' + exchangeNum + '.herokuapp.com/api/market_data/' + symbol, {}, function (error, response) {
 
-                var save_obj = {buy : [], sell : []};
-                _.each(response.data.buy, function(value, key) {
+                var save_obj = {buy: [], sell: []};
+                _.each(response.data.buy, function (value, key) {
                     var value_key_obj = {
-                        price : parseFloat(key),
-                        amount : value
+                        price: parseFloat(key),
+                        amount: value
                     };
 
                     save_obj.buy.push(value_key_obj);
                 });
-                _.each(response.data.sell, function(value, key) {
+                _.each(response.data.sell, function (value, key) {
                     var value_key_obj = {
-                        price : parseFloat(key),
-                        amount : value
+                        price: parseFloat(key),
+                        amount: value
                     };
 
                     save_obj.sell.push(value_key_obj);
