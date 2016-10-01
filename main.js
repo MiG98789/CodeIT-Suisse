@@ -105,6 +105,7 @@ if (Meteor.isServer) {
             });
         },
         'marketSell': function (exchange, symbol, qty) {
+            console.log("market sell: exchange: " + exchange + " symbol: " + symbol + " qty: " + qty);
             var postData = {
                 data: {
                     team_uid: team_uid,
@@ -125,6 +126,8 @@ if (Meteor.isServer) {
             });
         },
         'limitBuy': function (exchange, symbol, qty, price) {
+            console.log("limit buy: exchange: " + exchange + " symbol: " + symbol + " qty: " + qty + "price: " + price);
+
             var postData = {
                 data: {
                     team_uid: team_uid,
@@ -146,6 +149,7 @@ if (Meteor.isServer) {
             });
         },
         'limitSell': function (exchange, symbol, qty, price) {
+            console.log("limit sell: exchange: " + exchange + " symbol: " + symbol + " qty: " + qty + " price: " + price);
             var postData = {
                 data: {
                     team_uid: team_uid,
@@ -166,8 +170,10 @@ if (Meteor.isServer) {
                 }
             });
         },
-        'deleteLimit': function (order_id) {
-            var response = HTTP.call('DELETE', 'http://cis2016-exchange1.herokuapp.com/api/orders/' + order_id, {}, function (error, response) {
+        'deleteLimit': function (exchange, order_id) {
+            console.log("delete limit: exchange: " + exchange + " order id: " + order_id);
+
+            var response = HTTP.call('DELETE', 'http://cis2016-exchange' + exchange + '.herokuapp.com/api/orders/' + order_id, {}, function (error, response) {
 
                 if (error) {
                     console.log(error);
@@ -194,7 +200,7 @@ if (Meteor.isClient) {
             // Meteor.call('marketSell', 1, '0388', 10);
             // Meteor.call('limitBuy', 1, '0388', 10, 0);
             // Meteor.call('limitSell', 1, '0388', 10, 100000);
-            // Meteor.call('deleteLimit', '596c80a2-3217-4845-8fc2-f4b868555115');
+            // Meteor.call('deleteLimit', 1, '596c80a2-3217-4845-8fc2-f4b868555115');
         }
     });
 
