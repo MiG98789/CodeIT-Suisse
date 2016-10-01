@@ -1,3 +1,5 @@
+import './imports/bracketedOrder.js';
+
 Listings1 = new Mongo.Collection('listings1');
 Listings2 = new Mongo.Collection('listings2');
 Listings3 = new Mongo.Collection('listings3');
