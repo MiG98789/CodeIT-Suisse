@@ -1,37 +1,54 @@
-Posts = new Mongo.Collection('posts');
-
+Listings = new Mongo.Collection('listings');
 //loops
 if (Meteor.isServer) {
-    Meteor.publish('market', function (market) {
-        try {
+
+}
+var myInt;
+Meteor.methods({
+    'start': function () {
+        myInt = Meteor.setInterval(function () {
+            Listings.remove({});
+            console.log("********" + Listings.size);
             var response = HTTP.get('http://cis2016-exchange1.herokuapp.com/api/market_data/');
-            console.log(response.data);
 
             _.each(response.data, function (item) {
-                console.log(item);
-
-                var listing = {
-                    symbol: item.symbol,
-                    time: item.time,
-                    bid: item.bid,
-                    ask: item.ask
-                };
-
+                //console.log(item);
+                Listings.insert(item);
             });
-
-        } catch (error) {
-            console.log("error:" + error);
-        }
-        this.ready();
-
-    });
-}
+            console.log(Listings.find().fetch());
+        }, 1000);
+    },
+    'stop': function () {
+        Meteor.clearInterval(myInt);
+    }
+});
 
 if (Meteor.isClient) {
-    var marketData = Meteor.subscribe('market');
-    console.log(marketData);
+    Template.buttons.events({
+        'click .start': function () {
+            Meteor.call('start');
+        },
+        'click .stop': function () {
+            Meteor.call('stop');
+        }
+    });
 }
 /*
+ if (Meteor.isClient) {
+ Meteor.subscribe('thePlayers');
+ console.log("MARKET DATA");
+ console.log(Listings.find().fetch());
+ /*
+ Tracker.autorun(function () {
+ var marketData = Meteor.subscribe('market');
+ console.log("MARKET DATA");
+ console.log(Posts.find());
+ //console.log(Posts);
+ //console.log(Posts.find().fetch());
+ });
+ }
+
+
  Session.setDefault('market', 'all');
 
  Tracker.autorun(function() {
