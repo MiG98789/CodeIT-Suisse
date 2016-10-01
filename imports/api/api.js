@@ -2,7 +2,7 @@ Listings1 = new Mongo.Collection('listings1');
 Listings2 = new Mongo.Collection('listings2');
 Listings3 = new Mongo.Collection('listings3');
 
-constants = new Mongo.Collection('listingAverages');
+Constants = new Mongo.Collection('constants');
 
 BuySell1 = new Mongo.Collection('buySell1');
 BuySell2 = new Mongo.Collection('buySell2');
@@ -52,57 +52,41 @@ if (Meteor.isServer) {
         },
         'updateBuySellData': function (exchangeNum, symbol) {
             console.log("Updating buy/sell data for symbol: " + symbol + " on exchange: " + exchangeNum);
-            var response = HTTP.get('http://cis2016-exchange' + exchangeNum + '.herokuapp.com/api/market_data/' + symbol, {}, function (error, response) {
+            HTTP.get('http://cis2016-exchange' + exchangeNum + '.herokuapp.com/api/market_data/' + symbol, {}, function (error, response) {
+
+                var save_obj = {buy : [], sell : []};
                 _.each(response.data.buy, function(value, key) {
-                    key = key.replace(".", "_");
+                    var value_key_obj = {
+                        price : parseFloat(key),
+                        amount : value
+                    };
+
+                    save_obj.buy.push(value_key_obj);
                 });
                 _.each(response.data.sell, function(value, key) {
-                    key = key.replace(".", "_");
+                    var value_key_obj = {
+                        price : parseFloat(key),
+                        amount : value
+                    };
+
+                    save_obj.sell.push(value_key_obj);
                 });
-                console.log("************");
-                console.log(response.data);
+
                 if (!error) {
-                    console.log(response.data);
                     switch (exchangeNum) {
                         case 1:
-                            BuySell1.remove();
-                            console.log("hi*****************************************");
-                            BuySell1.insert(response.data);
+                            BuySell1.insert(save_obj);
                             break;
                         case 2:
-                            BuySell2.remove();
-                            BuySell2.insert(response.data);
+                            BuySell2.insert(save_obj);
                             break;
                         case 3:
-                            BuySell3.remove();
-                            BuySell3.insert(response.data);
+                            BuySell3.insert(save_obj);
                             break;
                     }
                 }
             });
 
-        },
-        'updateExchangeData': function (exchangeNum) {
-            console.log("Getting data from exchange: " + exchangeNum);
-            var response = HTTP.get('http://cis2016-exchange' + exchangeNum + '.herokuapp.com/api/market_data', {}, function (error, response) {
-                if (!error) {
-                    console.log(response.data);
-                    switch (exchangeNum) {
-                        case 1:
-                            BuySell1.remove();
-                            BuySell1.insert(response.data);
-                            break;
-                        case 2:
-                            BuySell2.remove();
-                            BuySell2.insert(response.data);
-                            break;
-                        case 3:
-                            BuySell3.remove();
-                            BuySell3.insert(response.data);
-                            break;
-                    }
-                }
-            });
         },
         'marketBuy': function (exchange, symbol, qty) {
             console.log("market buy: exchange: " + exchange + " symbol: " + symbol + " qty: " + qty);
