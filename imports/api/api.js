@@ -1,4 +1,11 @@
+import {setMinMax} from '../algorithm/bracketedOrder.js';
+import {verifyOrder} from '../algorithm/bracketedOrder.js';
+
 Listings1 = new Mongo.Collection('listings1');
+Listings1.insert({
+
+});
+
 Listings2 = new Mongo.Collection('listings2');
 Listings3 = new Mongo.Collection('listings3');
 
@@ -8,7 +15,7 @@ BuySell1 = new Mongo.Collection('buySell1');
 BuySell2 = new Mongo.Collection('buySell2');
 BuySell3 = new Mongo.Collection('buySell3');
 
-var team_uid = 'DXSloWjyT-EKW7NnGPDr2Q';
+var team_uid = 'kKcYIo6QignhVwziE889Mg';
 
 if (Meteor.isServer) {
     Listings1.remove({});
@@ -29,18 +36,24 @@ if (Meteor.isServer) {
                         switch (k) {
                             case 1:
                                 Listings1.insert(item);
+                                verifyOrder(response.data);
                                 break;
                             case 2:
                                 Listings2.insert(item);
+                                verifyOrder(response.data);
                                 break;
                             case 3:
                                 Listings3.insert(item);
+                                verifyOrder(response.data);
                                 break;
                         }
                     });
+
+
                     //console.log(Listings.find().fetch());
                     console.log("Updated market for exchange: " + k);
                 }
+
             }, 1000);
         },
         'stop': function () {
@@ -207,4 +220,15 @@ if (Meteor.isClient) {
         }
     });
 
+    Template.bracket.events({
+        'submit form': function(event){
+            event.preventDefault();
+            console.log("Submitted form");
+            setMinMax(document.forms['myForm']['min'].value, document.forms['myForm']['max'].value);
+        }
+    });
 }
+
+export default Listings1;
+export default Listings2;
+export default Listings3;

@@ -4,8 +4,19 @@
 
 <body>
 <h1>CODEIT Team: 10_out_of_10</h1>
+{{> bracket}}
 {{> buttons}}
 </body>
+
+<template name="bracket">
+    <form name="myForm" method="post">
+        <label for="min">Price to buy:</label>
+        <input type="text" name="min">
+        <label for="max">Price to sell:</label>
+        <input type="text" name="max">
+        <input type="submit" value="Set">
+    </form>
+</template>
 
 <template name="buttons">
     <button class="start">Start</button>
