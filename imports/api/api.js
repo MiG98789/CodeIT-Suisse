@@ -53,11 +53,13 @@ if (Meteor.isServer) {
         'updateBuySellData': function (exchangeNum, symbol) {
             console.log("Updating buy/sell data for symbol: " + symbol + " on exchange: " + exchangeNum);
             var response = HTTP.get('http://cis2016-exchange' + exchangeNum + '.herokuapp.com/api/market_data/' + symbol, {}, function (error, response) {
-                _.each(response.data.buy, function(value, key) {
-                    key = key.replace(".", "_");
+                _.each(response.data.buy, function (value, key) {
+                    var temp = key.replace(".", "_");
+                    key = temp;
                 });
-                _.each(response.data.sell, function(value, key) {
-                    key = key.replace(".", "_");
+                _.each(response.data.sell, function (value, key) {
+                    var temp = key.replace(".", "_");
+                    key = temp;
                 });
                 console.log("************");
                 console.log(response.data);
@@ -81,28 +83,6 @@ if (Meteor.isServer) {
                 }
             });
 
-        },
-        'updateExchangeData': function (exchangeNum) {
-            console.log("Getting data from exchange: " + exchangeNum);
-            var response = HTTP.get('http://cis2016-exchange' + exchangeNum + '.herokuapp.com/api/market_data', {}, function (error, response) {
-                if (!error) {
-                    console.log(response.data);
-                    switch (exchangeNum) {
-                        case 1:
-                            BuySell1.remove();
-                            BuySell1.insert(response.data);
-                            break;
-                        case 2:
-                            BuySell2.remove();
-                            BuySell2.insert(response.data);
-                            break;
-                        case 3:
-                            BuySell3.remove();
-                            BuySell3.insert(response.data);
-                            break;
-                    }
-                }
-            });
         },
         'marketBuy': function (exchange, symbol, qty) {
             console.log("market buy: exchange: " + exchange + " symbol: " + symbol + " qty: " + qty);
