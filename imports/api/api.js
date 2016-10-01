@@ -53,6 +53,14 @@ if (Meteor.isServer) {
         'updateBuySellData': function (exchangeNum, symbol) {
             console.log("Updating buy/sell data for symbol: " + symbol + " on exchange: " + exchangeNum);
             var response = HTTP.get('http://cis2016-exchange' + exchangeNum + '.herokuapp.com/api/market_data/' + symbol, {}, function (error, response) {
+                _.each(response.data.buy, function(value, key) {
+                    key = key.replace(".", "_");
+                });
+                _.each(response.data.sell, function(value, key) {
+                    key = key.replace(".", "_");
+                });
+                console.log("************");
+                console.log(response.data);
                 if (!error) {
                     console.log(response.data);
                     switch (exchangeNum) {
